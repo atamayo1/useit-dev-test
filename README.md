@@ -2,4 +2,4 @@
 
 ## para inicializar el proyecto debes poner el siguiente comando:
 
-**yarn start**
+-- yarn start
