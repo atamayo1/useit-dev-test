@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView, RefreshControl, Picker} from "react-native";
 import * as firebase from "firebase";
 import 'firebase/firestore';
-import { Card, Icon } from 'react-native-elements';
+import { Card, Icon, Button } from 'react-native-elements';
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -21,7 +21,7 @@ export default class HomeScreen extends React.Component {
 
     this.setState({uid, email, displayName });
 
-    if(this.state.filter == "recent"){
+    if(this.state.filter === "recent"){
         this.fetchDate();
     }else{
         this.fetchData();
@@ -160,6 +160,20 @@ export default class HomeScreen extends React.Component {
 
                             {this.showOptions(event, this.state)}
                         </View>
+                        <View style={styles.contentbtnintersting}>
+                            <Button
+                                title="si está interesado"
+                                type="outline"
+                            />
+                            <Button
+                                title="asistir"
+                                type="outline"
+                            />
+                            <Button
+                                title="rechazar"
+                                type="outline"
+                            />
+                        </View>
                     </Card>
                 )): null}
         </View>
@@ -202,6 +216,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between"
     },
+    contentbtnintersting: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between"
+    },
     button: {
         marginHorizontal: 30,
         backgroundColor: "#79B254",
@@ -209,5 +229,5 @@ const styles = StyleSheet.create({
         height: 52,
         alignItems: "center",
         justifyContent: "center"
-    }
+    },
 });
