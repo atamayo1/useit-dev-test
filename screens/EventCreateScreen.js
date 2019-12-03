@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Picker } from "react-native";
 import * as firebase from "firebase";
 import 'firebase/firestore';
+import DatePicker from 'react-native-datepicker'
 
 export default class EventCreateScreen extends React.Component {
     state = {
@@ -68,22 +69,53 @@ export default class EventCreateScreen extends React.Component {
 
                     <View style={{ marginTop: 32 }}>
                         <Text style={styles.inputTitle}>Date</Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            onChangeText={fecha => this.setState({ fecha })}
-                            value={fecha}
-                        ></TextInput>
+                        <DatePicker
+                            style={{width: 350}}
+                            date={fecha}
+                            mode="date"
+                            placeholder="select date"
+                            format="DD/MM/YYYY"
+                            confirmBtnText="Confirm"
+                            cancelBtnText="Cancel"
+                            customStyles={{
+                                dateIcon: {
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0
+                                },
+                                dateInput: {
+                                    marginLeft: 36
+                                }
+                                // ... You can check the source to find the other keys.
+                            }}
+                            onDateChange={fecha => this.setState({ fecha })}
+                        />
                     </View>
 
                     <View style={{ marginTop: 32 }}>
                         <Text style={styles.inputTitle}>Hour</Text>
-                        <TextInput
-                            style={styles.input}
-                            autoCapitalize="none"
-                            onChangeText={hora => this.setState({ hora })}
-                            value={hora}
-                        ></TextInput>
+                        <DatePicker
+                            style={{width: 350}}
+                            date={hora}
+                            mode="time"
+                            placeholder="select hour"
+                            confirmBtnText="Confirm"
+                            cancelBtnText="Cancel"
+                            customStyles={{
+                                dateIcon: {
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0
+                                },
+                                dateInput: {
+                                    marginLeft: 36
+                                }
+                                // ... You can check the source to find the other keys.
+                            }}
+                            onDateChange={hora => this.setState({ hora })}
+                        />
                     </View>
                     <Picker
                         selectedValue={state}
