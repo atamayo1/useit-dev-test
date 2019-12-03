@@ -88,7 +88,7 @@ export default class CommentListScreen extends React.Component {
     render() {
         const {comments} = this.state;
         const {namecomment, descriptioncomment} = this.state;
-        const {name, description, fecha, hora, state} = this.state;
+        const {name, description, fecha, hora} = this.state;
         return (
             <ScrollView
                 refreshControl={
@@ -117,11 +117,6 @@ export default class CommentListScreen extends React.Component {
                     <View style={{ marginTop: 32 }}>
                         <Text style={styles.inputTitle}>Hora</Text>
                         <Text>{hora}</Text>
-                    </View>
-
-                    <View style={{ marginTop: 32 }}>
-                        <Text style={styles.inputTitle}>State</Text>
-                        <Text>{state}</Text>
                     </View>
                 </View>
 

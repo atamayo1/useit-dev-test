@@ -9,8 +9,10 @@ export default class HomeScreen extends React.Component {
       uid: "",
     email: "",
     displayName: "",
-      events: []
+      events: [],
+      filter: ""
   };
+
 
   db = firebase.firestore();
 
@@ -18,9 +20,26 @@ export default class HomeScreen extends React.Component {
     const { uid, email, displayName } = firebase.auth().currentUser;
 
     this.setState({uid, email, displayName });
-    this.fetchDate();
+
+    if(this.state.filter == "recent"){
+        this.fetchDate();
+    }else{
+        this.fetchData();
+    }
+
   }
 
+    fetchData = async () => {
+        this.db.collection('eventos').get().then((querySnapshot) => {
+            this.setState({
+                events: querySnapshot.docs.map(doc => {
+                    return {id: doc.id, data: doc.data()}
+                })
+            });
+        }, error => {
+            console.log(error);
+        });
+    };
     fetchDate = async () => {
         this.db.collection('eventos').orderBy('fecha','desc').get().then((querySnapshot) => {
             this.setState({
@@ -70,13 +89,20 @@ export default class HomeScreen extends React.Component {
 
     onRefresh(){
         this.setState({refreshing: true});
-        this.fetchDate().then(() => {
-            this.setState({refreshing:false})
-        });
+        if(this.state.filter === "recent"){
+            this.fetchDate().then(() => {
+                this.setState({refreshing:false})
+            });
+        }else{
+            this.fetchData().then(() => {
+                this.setState({refreshing:false})
+            });
+        }
     }
 
   render() {
       const {events} = this.state;
+      const {filter} = this.state;
     return (
         <ScrollView
             refreshControl={
@@ -105,6 +131,13 @@ export default class HomeScreen extends React.Component {
 
             <Text style={styles.greeting}>List of Events</Text>
 
+            <Picker
+                selectedValue={filter}
+                style={{height: 50, width: 350, alignSelf: "center"}}
+                onValueChange={filter => this.setState({ filter })}>
+                <Picker.Item label="Select the filter of events" value="" />
+                <Picker.Item label="Recent Event" value="recent" />
+            </Picker>
 
                 {events && events !== undefined ? events.map((event, key) => (
                     <Card key={key}>
