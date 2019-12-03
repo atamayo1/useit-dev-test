@@ -14,16 +14,6 @@ export default class HomeScreen extends React.Component {
 
   db = firebase.firestore();
 
-    filterEventsByMoreComments = () => {
-    };
-
-    filterEventsByIntersting = () => {
-    };
-
-    filterEventsByDate = () => {
-    };
-
-
     componentDidMount() {
     const { uid, email, displayName } = firebase.auth().currentUser;
 
@@ -32,7 +22,7 @@ export default class HomeScreen extends React.Component {
   }
 
     fetchDate = async () => {
-        this.db.collection('eventos').get().then((querySnapshot) => {
+        this.db.collection('eventos').orderBy('fecha','desc').get().then((querySnapshot) => {
             this.setState({
                 events: querySnapshot.docs.map(doc => {
                     return {id: doc.id, data: doc.data()}

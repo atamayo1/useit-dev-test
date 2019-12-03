@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, StyleSheet, ScrollView, TextInput, Picker, TouchableOpacity} from "react-native";
+import {View, Text, StyleSheet, ScrollView, TextInput, Picker, TouchableOpacity, RefreshControl} from "react-native";
 import * as firebase from "firebase";
 import 'firebase/firestore';
 import {Card, Icon} from 'react-native-elements';
@@ -18,16 +18,8 @@ export default class CommentListScreen extends React.Component {
         const { uid, email, displayName } = firebase.auth().currentUser;
 
         this.setState({uid, email, displayName });
+        this.fetchData();
 
-        this.db.collection('comments').where("eventid", "==" , this.parameter.idEvent).get().then((querySnapshot) => {
-            this.setState({
-                comments: querySnapshot.docs.map(doc => {
-                    return {id: doc.id, data: doc.data()}
-                })
-            });
-        }, error => {
-            console.log(error);
-        });
         this.getEvent(this.parameter.idEvent);
     }
 
@@ -38,6 +30,18 @@ export default class CommentListScreen extends React.Component {
             idEvent: this.props.navigation.state.params.idEvent,
         };
     }
+
+    fetchData = async () => {
+        this.db.collection('comments').where("eventid", "==" , this.parameter.idEvent).get().then((querySnapshot) => {
+            this.setState({
+                comments: querySnapshot.docs.map(doc => {
+                    return {id: doc.id, data: doc.data()}
+                })
+            });
+        }, error => {
+            console.log(error);
+        });
+    };
 
     getEvent = (id) => {
         let docRef = this.db.collection("eventos").doc(id);
@@ -69,18 +73,28 @@ export default class CommentListScreen extends React.Component {
             userid: this.state.uid
         }).then(() => {
             console.log('Agregado el comentario');
-            this.props.navigation.navigate('Home');
         }).catch(() => {
             console.log('error');
         });
     };
+
+    onRefresh(){
+        this.setState({refreshing: true});
+        this.fetchData().then(() => {
+            this.setState({refreshing:false})
+        });
+    }
 
     render() {
         const {comments} = this.state;
         const {namecomment, descriptioncomment} = this.state;
         const {name, description, fecha, hora, state} = this.state;
         return (
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh.bind(this)} />
+                }
+            >
             <View style={styles.container}>
                 <Text style={styles.greeting}>Event</Text>
 
